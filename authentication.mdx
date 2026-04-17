@@ -1,0 +1,153 @@
+---
+title: Authentication and Authorization
+description: Learn how to securely authenticate requests to the Siteglide API using API keys and site-specific identifiers.
+---
+
+## Overview
+
+Siteglide API requires authentication for all requests to ensure secure access to your site's data. You authenticate using a unique API key paired with your specific site ID. The API key authorizes your requests, while the site ID scopes them to your Siteglide site.
+
+Generate your API key from the Siteglide dashboard. Include it in the `Authorization` header as `Bearer {your-api-key}` and pass the site ID as a query parameter `site_id={your-site-id}` in every request.
+
+<Callout kind="info">
+  Keep your API key secure. Never expose it in client-side code or public repositories.
+</Callout>
+
+## Generating API Keys
+
+Follow these steps to create and manage your API keys in the Siteglide dashboard.
+
+<Steps>
+  <Step title="Log In" icon="log-in">
+    Access your Siteglide dashboard at `https://dashboard.siteglide.com`.
+  </Step>
+  <Step title="Navigate to API Settings" icon="settings">
+    Go to **Account > API Keys**.
+  </Step>
+  <Step title="Create Key" icon="key">
+    Click **Generate New Key**. Copy the key immediately—it displays only once.
+  </Step>
+  <Step title="Assign Permissions" icon="shield">
+    Select scopes like read/write for modules, forms, and categories.
+  </Step>
+</Steps>
+
+<Expandable title="Managing Existing Keys" default-open="false">
+  View all keys in the API section. Revoke compromised keys and rotate them regularly.
+
+  Use the dashboard search to filter by creation date or permissions.
+</Expandable>
+
+## Authentication Parameters
+
+Include these parameters in every API request.
+
+<ParamField header="Authorization" param-type="string" required="true">
+  Format: `Bearer your-api-key-here`. Replace with your generated key.
+</ParamField>
+
+<ParamField query="site_id" param-type="integer" required="true">
+  Your Siteglide site ID, found in dashboard under **Site Settings**.
+</ParamField>
+
+## Making Authenticated Requests
+
+Send requests to `https://your-site.siteglide.com/api/site/v2` with authentication.
+
+<Request tabs="cURL,JavaScript,Python" show-lines="true">
+  ```bash
+  curl "https://your-site.siteglide.com/api/site/v2/categories?site_id=123456" \
+    -H "Authorization: Bearer your-api-key-here"
+  ```
+
+  ```javascript
+  const response = await fetch(
+    "https://your-site.siteglide.com/api/site/v2/categories?site_id=123456",
+    {
+      headers: {
+        "Authorization": "Bearer your-api-key-here"
+      }
+    }
+  );
+  const data = await response.json();
+  ```
+
+  ```python
+  import requests
+
+  response = requests.get(
+    "https://your-site.siteglide.com/api/site/v2/categories?site_id=123456",
+    headers={
+      "Authorization": "Bearer your-api-key-here"
+    }
+  )
+  data = response.json()
+  ```
+</Request>
+
+<Response tabs="200">
+  ```json
+  {
+    "categories": [
+      {
+        "id": 1,
+        "name": "Blog",
+        "slug": "blog"
+      }
+    ]
+  }
+  ```
+</Response>
+
+<Tabs>
+  <Tab title="List Categories" icon="list">
+    Retrieve all categories from your site.
+  </Tab>
+  <Tab title="Single Category" icon="database">
+    Fetch details for category ID `1`:
+
+    ```bash
+    curl "https://your-site.siteglide.com/api/site/v2/categories/1?site_id=123456" \
+      -H "Authorization: Bearer your-api-key-here"
+    ```
+  </Tab>
+</Tabs>
+
+## Security Best Practices
+
+Protect your API access with these guidelines.
+
+<Callout kind="alert">
+  - Rotate keys every 90 days or after potential exposure.
+  - Use environment variables: `process.env.API_KEY` in Node.js or `os.environ['API_KEY']` in Python.
+  - Limit scopes to minimum required permissions.
+  - Monitor usage in the dashboard for anomalies.
+</Callout>
+
+Avoid hardcoding keys in code. Use secure vaults like AWS Secrets Manager for production.
+
+<CodeGroup tabs="Node.js,Docker">
+  ```javascript
+  const apiKey = process.env.SITEGLIDE_API_KEY;
+  ```
+  ```dockerfile
+  ENV SITEGLIDE_API_KEY=your-api-key-here
+  ```
+</CodeGroup>
+
+## Next Steps
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="zap" href="/quickstart">
+    Build your first API integration.
+  </Card>
+  <Card title="Modules" icon="package" href="/modules">
+    Manage module items and data.
+  </Card>
+  <Card title="Forms" icon="file-text" href="/forms">
+    Handle form cases and submissions.
+  </Card>
+  <Card title="Categories" icon="tag" href="/categories">
+    Organize your site's categories.
+  </Card>
+</Columns>

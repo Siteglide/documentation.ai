@@ -1,0 +1,31 @@
+---
+title: API Request Failed
+description: How to resolve common Siteglide API request errors.
+---
+
+## Error
+
+- Response: `401 Unauthorized` or `400 Bad Request`
+- Requests not returning data
+
+## Possible Causes
+
+- Invalid or missing API Token
+- Incorrect endpoint URL
+- Token expired
+
+## Quick Fix
+
+<Steps>
+  <Step title="Check API Token">
+    ````bash
+    curl -H "Authorization: Bearer [your_token]" https://api.siteglide.com/v1/ping
+    ````
+  </Step>
+  <Step title="Verify URL">
+    Confirm endpoint starts with `https://api.siteglide.com/v1/`
+  </Step>
+  <Step title="Regenerate Token">
+    Create a new token via Siteglide Admin if necessary.
+  </Step>
+</Steps>

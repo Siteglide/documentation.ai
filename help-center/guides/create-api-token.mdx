@@ -1,0 +1,27 @@
+---
+title: Create an API Token with Siteglide
+description: Quick guide to generate a Siteglide API token.
+---
+
+## Overview
+
+Use an API Token to access Siteglide programmatically.
+
+## Steps
+
+<Steps>
+  <Step title="Access Admin">
+    Log into your Siteglide Admin dashboard.
+  </Step>
+  <Step title="Navigate to API Tokens">
+    Go to **Site Settings > API Tokens**.
+  </Step>
+  <Step title="Generate Token">
+    Click **Create Token**. Copy and store the token securely.
+  </Step>
+  <Step title="Test with API">
+    ````bash
+    curl -H "Authorization: Bearer YOUR_TOKEN" https://api.siteglide.com/v1/sites
+    ````
+  </Step>
+</Steps>

@@ -1,0 +1,177 @@
+---
+title: Quickstart Guide
+description: Get up and running with the Siteglide API in minutes by making your first API call to retrieve site data.
+---
+
+## Prerequisites
+
+Before starting, gather these essentials:
+
+<Callout kind="info">
+
+- Your Siteglide `site_id` (found in your Siteglide dashboard under Site Settings)
+- Your API key (generate one in Siteglide under Developer > API Keys)
+- A tool like Postman, curl, or a programming environment (Node.js, Python)
+
+</Callout>
+
+Verify your credentials work by noting your base URL follows `{your-site}.siteglide.site/api/site/v2`.
+
+## Obtain Your Credentials
+
+Follow these steps to get your `site_id` and API key:
+
+<Steps>
+  <Step title="Find Site ID" icon="settings">
+    Log into your Siteglide dashboard.
+    
+    Navigate to **Site Settings** > **General**.
+    
+    Copy the `site_id` (a numeric value like `12345`).
+  </Step>
+  
+  <Step title="Generate API Key" icon="key">
+    Go to **Developer** > **API Keys**.
+    
+    Click **Create New Key**.
+    
+    Copy the generated key (format: `sk_...`).
+    
+    <Callout kind="tip">
+      Store securely—do not commit to version control.
+    </Callout>
+  </Step>
+</Steps>
+
+## Set Up Your Environment
+
+Install required tools based on your preferred language:
+
+<Tabs>
+  <Tab title="Node.js" icon="nodejs">
+    
+    Ensure Node.js is installed (v18+).
+    
+````bash
+npm init -y
+npm install axios
+````
+  
+  </Tab>
+  
+  <Tab title="Python" icon="python">
+    
+    Use Python 3.8+ with `requests`.
+    
+````bash
+pip install requests
+````
+  
+  </Tab>
+</Tabs>
+
+## Make Your First API Call
+
+Test the API with a simple GET request to list categories. Use query parameters `api_key` and `site_id`.
+
+Replace placeholders with your values:
+
+<Request tabs="cURL,JavaScript,Python" default-tab="1" show-lines="true">
+  
+````curl
+curl "https://example.siteglide.site/api/site/v2/categories?api_key=YOUR_API_KEY&site_id=YOUR_SITE_ID"
+````
+
+````javascript
+const axios = require('axios');
+
+const response = await axios.get('https://example.siteglide.site/api/site/v2/categories', {
+  params: {
+    api_key: 'YOUR_API_KEY',
+    site_id: 'YOUR_SITE_ID'
+  }
+});
+
+console.log(response.data);
+````
+
+````python
+import requests
+
+response = requests.get(
+  'https://example.siteglide.site/api/site/v2/categories',
+  params={
+    'api_key': 'YOUR_API_KEY',
+    'site_id': 'YOUR_SITE_ID'
+  }
+)
+
+print(response.json())
+````
+  
+</Request>
+
+Expect this response structure:
+
+<Response tabs="200" show-lines="false">
+```json
+{
+  "categories": [
+    {
+      "id": 1,
+      "name": "Blog",
+      "slug": "blog",
+      "description": "Site blog posts"
+    },
+    {
+      "id": 2,
+      "name": "Products",
+      "slug": "products",
+      "description": "Ecommerce items"
+    }
+  ]
+}
+```
+</Response>
+
+<Callout kind="success">
+  Success! You retrieved categories. Note the `id` for further requests.
+</Callout>
+
+## Test with Postman
+
+Import this cURL into Postman:
+
+1. Open Postman > **Import** > Paste cURL.
+2. Update `YOUR_API_KEY` and `YOUR_SITE_ID`.
+3. Send and explore the response.
+
+## Next Steps
+
+Dive deeper into Siteglide API features:
+
+<Columns cols={2}>
+  <Card title="Authentication" icon="shield" href="/authentication">
+    Secure your requests with full auth flows.
+  </Card>
+  
+  <Card title="Categories" icon="tag" href="/categories">
+    Manage categories via CRUD operations.
+  </Card>
+  
+  <Card title="Modules" icon="package" href="/modules">
+    Work with dynamic module items.
+  </Card>
+  
+  <Card title="Forms & Cases" icon="file-text" href="/forms">
+    Handle form submissions and cases.
+  </Card>
+</Columns>
+
+<Expandable title="Troubleshooting Common Issues" default-open="false">
+  
+- **401 Unauthorized**: Check `api_key` and `site_id` spelling.
+- **404 Not Found**: Verify base URL matches your site (`{your-site}.siteglide.site`).
+- **Rate Limits**: API enforces `{<1000}` requests/minute—implement retries.
+  
+</Expandable>

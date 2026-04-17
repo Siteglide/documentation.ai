@@ -1,0 +1,21 @@
+---
+title: How do I authenticate with Siteglide API?
+description: Learn how to securely connect to the Siteglide API.
+---
+
+## Authentication Method
+
+All Siteglide API requests require a valid API Token in the Authorization header.
+
+## Steps
+
+1. Log in to your Siteglide Admin
+2. Go to **Site Settings > API Tokens**
+3. Click **Create Token** and copy it securely
+
+## Example Usage
+
+```bash
+curl -H "Authorization: Bearer YOUR_SITEGLIDE_API_TOKEN" \
+  https://api.siteglide.com/v1/sites
+```

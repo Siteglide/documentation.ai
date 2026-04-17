@@ -1,0 +1,144 @@
+---
+title: Changelog
+description: Track updates and changes to the Siteglide API, including new features, bug fixes, and deprecations.
+---
+
+## Recent Updates
+
+<Update label="2024-10-15" description="v2.0.0" tags={["breaking", "feature"]}>
+
+## New Features
+
+- Introduced Cases endpoint for managing form submissions: `GET /forms/{form}/cases`
+- Added Categories endpoints for full CRUD operations: `GET /categories`, `POST /categories/create`
+- New Modules endpoints to retrieve and manage items: `GET /modules/{module}/items`
+
+## Breaking Changes
+
+- Updated base path to `/api/site/v2`
+- Deprecated v1.1.2 endpoints; migrate to v2 for continued support
+- Authentication now requires both `apiKey` and `siteID` in headers
+
+## Improvements
+
+- Enhanced response formats with consistent pagination
+- Added OAS 3.1 schema validation for better tooling support
+
+</Update>
+
+<Update label="2024-08-20" description="v1.9.5" tags={["bugfix", "improvement"]}>
+
+## Bug Fixes
+
+- Fixed intermittent 500 errors on high-traffic category retrievals
+- Resolved incorrect `id` parsing in module item updates
+
+## Improvements
+
+- Optimized query performance for large module datasets
+- Added `limit` and `offset` query parameters for better control
+
+</Update>
+
+<Update label="2024-07-10" description="v1.9.0" tags={["feature"]}>
+
+## New Features
+
+- Portal API separation: Use dedicated endpoint for portal operations
+- Initial support for category updates via `PUT /categories/{id}`
+
+## Improvements
+
+- Roadmap integration: Track upcoming features at [roadmap.siteglide.com](https://roadmap.siteglide.com)
+
+</Update>
+
+## Key Changes in v2.0.0
+
+The v2.0.0 release represents a major update to the Siteglide API. You now interact with endpoints like Cases for form data, Categories for organization, and Modules for content management. All requests use the new server base: `{your-site}/api/site/v2`.
+
+<Callout kind="alert">
+  v1.1.2 is deprecated. Update your integrations immediately to avoid disruptions.
+</Callout>
+
+## Migrating from v1.1.2 to v2.0.0
+
+Follow these steps to migrate smoothly.
+
+<Steps>
+  <Step title="Update Base URL" icon="globe">
+
+    Change your API calls from v1 paths to the new v2 server:
+
+````javascript
+// Old
+const base = 'https://api.siteglide.co.uk/v1';
+
+// New
+const base = `${yourSite}/api/site/v2`;
+````
+
+  </Step>
+  <Step title="Add siteID Header" icon="settings">
+
+    Include both `apiKey` and `siteID` in authorization headers:
+
+````javascript
+headers: {
+  'apiKey': 'YOUR_API_KEY',
+  'siteID': 'YOUR_SITE_ID'
+}
+````
+
+  </Step>
+  <Step title="Test New Endpoints" icon="play">
+
+    Verify core endpoints like categories:
+
+    <Request tabs="cURL,JavaScript">
+    ````bash
+    curl -H "apiKey: YOUR_API_KEY" \
+         -H "siteID: YOUR_SITE_ID" \
+         https://your-site.com/api/site/v2/categories
+    ````
+    ````javascript
+    const response = await fetch('https://your-site.com/api/site/v2/categories', {
+      headers: {
+        'apiKey': 'YOUR_API_KEY',
+        'siteID': 'YOUR_SITE_ID'
+      }
+    });
+    ````
+    </Request>
+
+  </Step>
+</Steps>
+
+## Upcoming Features
+
+Check the [roadmap](https://roadmap.siteglide.com) for planned enhancements.
+
+<Columns cols={2}>
+  <Card title="Enhanced Webhooks" icon="zap" href="https://roadmap.siteglide.com">
+    Real-time notifications for module changes.
+  </Card>
+  <Card title="Bulk Operations" icon="package" href="https://roadmap.siteglide.com">
+    Create and update multiple items at once.
+  </Card>
+</Columns>
+
+<Expandable title="Detailed Migration Guide" default-open="false">
+
+For complex migrations, review these changes:
+
+| Old Endpoint | New Endpoint | Notes |
+|--------------|--------------|-------|
+| `/categories` | `/categories` | Unchanged, but new auth required |
+| N/A | `/forms/{form}/cases` | New for form cases |
+| `/modules/items` | `/modules/{module}/items` | Module-specific scoping |
+
+</Expandable>
+
+<Callout kind="tip">
+  Customize this changelog with your actual release notes. Use the Update component for new entries.
+</Callout>
