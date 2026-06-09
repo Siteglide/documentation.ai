@@ -1,0 +1,2347 @@
+{
+  "openapi": "3.1.1",
+  "info": {
+    "title": "Siteglide Site API",
+    "version": "2.0.0",
+    "description": "<p>API for interacting with your Siteglide site.</p>\n\t\t<p>To test, authorize with your apiKey and siteID.</p>\n\t\t<hr/>\n\t\t<p>Looking for our Portal API? <a href=\"/portal/docs\">Click here</a></p>\n\t\t<p>To find documentation for v1.1.2 of Siteglide API, which is now deprecated, please follow this link - <a href=\"/v1/docs\">v1.1.2 API docs (deprecated)</a></p>\n\t\t<hr/>\n\t\t<a href=\"https://roadmap.siteglide.com\" rel=\"noopener\" target=\"_blank\">Roadmap</a>"
+  },
+  "produces": [
+    "application/json"
+  ],
+  "servers": [
+    {
+      "url": "{{your site}}/api/site/v2"
+    }
+  ],
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-api-key"
+      },
+      "siteID": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "x-site-id"
+      }
+    }
+  },
+  "paths": {
+    "/forms/{form}/cases": {
+      "get": {
+        "tags": [
+          "Cases"
+        ],
+        "name": "Get a list of cases in the CRM",
+        "summary": "Retrieve an overview list of all form cases from your website",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "form",
+            "in": "path",
+            "description": "The form ID which the cases are linked to.",
+            "example": 1,
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          },
+          {
+            "name": "filter",
+            "in": "query",
+            "description": "Filter cases on custom fields",
+            "schema": {
+              "type": "array",
+              "items": {
+                "type": "object"
+              }
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - The form does not contain any cases"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/forms/{form}/cases/{id}": {
+      "get": {
+        "tags": [
+          "Cases"
+        ],
+        "name": "Get individual case details",
+        "summary": "Retrieve all data about an individual form case",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "form",
+            "in": "path",
+            "required": true,
+            "description": "The ID of your form",
+            "example": 1,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the case",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Case does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/forms/{form}/cases/create": {
+      "post": {
+        "tags": [
+          "Cases"
+        ],
+        "name": "Create a case",
+        "summary": "Create a case against a specific user",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "form",
+            "in": "path",
+            "required": true,
+            "description": "The ID of your form",
+            "example": 1,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Cases custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "userID"
+                ],
+                "properties": {
+                  "userID": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Case does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/categories": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "name": "Get a list of categories in the site",
+        "summary": "Retrieve an overview list of all categories from your website",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - The form does not contain any cases"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/categories/{id}": {
+      "get": {
+        "tags": [
+          "Categories"
+        ],
+        "name": "Get individual category details",
+        "summary": "Retrieve all data about an individual category",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the category",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Case does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Categories"
+        ],
+        "name": "Update Cateory",
+        "summary": "Update a category",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Category ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your category custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "weighting": {
+                    "type": "string"
+                  },
+                  "meta_title": {
+                    "type": "string"
+                  },
+                  "meta_desc": {
+                    "type": "string"
+                  },
+                  "og_title": {
+                    "type": "string"
+                  },
+                  "og_desc": {
+                    "type": "string"
+                  },
+                  "og_image": {
+                    "type": "string"
+                  },
+                  "og_type": {
+                    "type": "string"
+                  },
+                  "twitter_type": {
+                    "type": "string"
+                  },
+                  "image_alt": {
+                    "type": "string"
+                  },
+                  "parent": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/categories/create": {
+      "post": {
+        "tags": [
+          "Categories"
+        ],
+        "name": "Create a category",
+        "summary": "Create a category",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your categories custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "weighting": {
+                    "type": "string"
+                  },
+                  "meta_title": {
+                    "type": "string"
+                  },
+                  "meta_desc": {
+                    "type": "string"
+                  },
+                  "og_title": {
+                    "type": "string"
+                  },
+                  "og_desc": {
+                    "type": "string"
+                  },
+                  "og_image": {
+                    "type": "string"
+                  },
+                  "og_type": {
+                    "type": "string"
+                  },
+                  "twitter_type": {
+                    "type": "string"
+                  },
+                  "image_alt": {
+                    "type": "string"
+                  },
+                  "parent": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Case does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/modules/{module}/items": {
+      "get": {
+        "tags": [
+          "Modules"
+        ],
+        "name": "Get Module Items",
+        "summary": "Retrieve all Module Items from an individual Module",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "description": "The Module ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "items",
+            "in": "query",
+            "description": "A comma seperated list of item IDs to retrieve, leave empty to get all items",
+            "schema": {
+              "type": "id",
+              "format": "array"
+            }
+          },
+          {
+            "name": "properties",
+            "in": "query",
+            "description": "A comma seperated list of properties that you would like to retrieve, leave empty to get all properties",
+            "example": "name,slug,enabled",
+            "schema": {
+              "type": "string",
+              "format": "array"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Module does not exist or contains no Items"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/modules/{module}/items/{id}": {
+      "get": {
+        "tags": [
+          "Modules"
+        ],
+        "name": "Get individual Module Items",
+        "summary": "Retrieve all data about an individual Module Item",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "description": "The Module ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the Module item",
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Module Item does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "Modules"
+        ],
+        "name": "Update Module Item",
+        "summary": "Update a Module Item within an individual Module",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "description": "The Module ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Module Item ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Module custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "module_field_3_1": {
+                    "type": "string"
+                  },
+                  "module_field_custom_3_2": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/modules/{module}/create": {
+      "post": {
+        "tags": [
+          "Modules"
+        ],
+        "name": "Create Module Item",
+        "summary": "Create a Module Items within an individual Module",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "module",
+            "in": "path",
+            "required": true,
+            "description": "The Module ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Module custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "module_field_3_1": {
+                    "type": "string"
+                  },
+                  "module_field_custom_3_2": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/orders": {
+      "get": {
+        "tags": [
+          "eCommerce - Orders"
+        ],
+        "name": "Get a list of eCommerce orders in the CRM",
+        "summary": "Retrieve an overview list of all eCommerce orders from your website",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "properties",
+            "in": "query",
+            "description": "A comma seperated list of properties that you would like to retrieve, leave empty to get all properties",
+            "example": "name,slug,enabled",
+            "schema": {
+              "type": "string",
+              "format": "array"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - The CRM does not contain any orders"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/orders/user/{userID}": {
+      "get": {
+        "tags": [
+          "eCommerce - Orders"
+        ],
+        "name": "Get all orders from an individual user",
+        "summary": "Retrieve all eCommerce order data about an individual CRM user",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "userID",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - eCommerce order does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/orders/{id}": {
+      "get": {
+        "tags": [
+          "eCommerce - Orders"
+        ],
+        "name": "Get individual order details",
+        "summary": "Retrieve all data about an individual eCommerce order",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the eCommerce order",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - eCommerce order does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/products": {
+      "get": {
+        "tags": [
+          "eCommerce - Products"
+        ],
+        "name": "Get Products",
+        "summary": "Retrieve all products",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "properties",
+            "in": "query",
+            "description": "A comma seperated list of properties that you would like to retrieve, leave empty to get all properties",
+            "example": "name,slug,enabled",
+            "schema": {
+              "type": "string",
+              "format": "array"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Product does not exist or this site has no products"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/products/{id}": {
+      "get": {
+        "tags": [
+          "eCommerce - Products"
+        ],
+        "name": "Get individual product",
+        "summary": "Retrieve all data about an individual product",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the Product",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - Product does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "eCommerce - Products"
+        ],
+        "name": "Update a Product",
+        "summary": "Update a Product",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The Product Item ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Products custom fields as a JSON object. When updating Attributes and Attribute Options, if you do not provide an ID then a new item will be made. Providing a valid ID will update the existing item. For more information on Product Database structure, please see <a href=\"https://developers.siteglide.com/database-structure\" target=\"_blank\" rel=\"noopener nofollow\">this document</a>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "weighting": {
+                    "type": "string"
+                  },
+                  "expiry_date": {
+                    "type": "string"
+                  },
+                  "release_date": {
+                    "type": "string"
+                  },
+                  "category_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "secure_zone_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "module_field_14/product_1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_5": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/2": {
+                    "type": "string"
+                  },
+                  "attributes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "id": {
+                                "type": "string"
+                              },
+                              "name": {
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_3": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_4": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_6": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/aud/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/aud/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/cad/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/cad/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/eur/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/eur/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/gbp/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/gbp/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/nzd/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/nzd/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/usd/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/usd/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/inventory/1": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request - The API could not understand the request due to invalid syntax."
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/ecommerce/products/create": {
+      "post": {
+        "tags": [
+          "eCommerce - Products"
+        ],
+        "name": "Create a Product",
+        "summary": "Create a Product",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Products custom fields as a JSON object. For more information on Product Database structure, please see <a href=\"https://developers.siteglide.com/database-structure\" target=\"_blank\" rel=\"noopener nofollow\">this document</a>",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "weighting": {
+                    "type": "string"
+                  },
+                  "expiry_date": {
+                    "type": "string"
+                  },
+                  "release_date": {
+                    "type": "string"
+                  },
+                  "category_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "secure_zone_array": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  },
+                  "module_field_14/product_1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product_5": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/inventory/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/aud/4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/cad/4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/eur/4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/gbp/4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/nzd/4": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/1": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/2": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/3": {
+                    "type": "string"
+                  },
+                  "module_field_14/product/price/usd/4": {
+                    "type": "string"
+                  },
+                  "attributes": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "enabled": {
+                          "type": "string"
+                        },
+                        "items": {
+                          "type": "array",
+                          "items": {
+                            "type": "object",
+                            "properties": {
+                              "name": {
+                                "type": "string"
+                              },
+                              "enabled": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_3": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_4": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option_6": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/aud/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/aud/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/cad/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/cad/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/eur/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/eur/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/gbp/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/gbp/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/nzd/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/nzd/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/usd/1": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/price/usd/2": {
+                                "type": "string"
+                              },
+                              "module_field_14/product_attribute_option/inventory/1": {
+                                "type": "string"
+                              }
+                            }
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "400": {
+            "description": "Bad Request - The API could not understand the request due to invalid syntax."
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/users": {
+      "get": {
+        "tags": [
+          "CRM - Users"
+        ],
+        "name": "Get a list of users in the CRM",
+        "summary": "Retrieve an overview list of all CRM users from your website",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - The CRM does not contain any users"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/users/{id}": {
+      "get": {
+        "tags": [
+          "CRM - Users"
+        ],
+        "name": "Get individual user details",
+        "summary": "Retrieve all data about an individual CRM user",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID or Email Address of the user",
+            "example": "1234 or user@website.com",
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - CRM user does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "CRM - Users"
+        ],
+        "name": "Update a user",
+        "summary": "Update a CRM user",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the user",
+            "example": 1234,
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Users custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "secure_zones": {
+                    "type": "string"
+                  },
+                  "cfs_field_1_1": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - CRM user does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/users/create": {
+      "post": {
+        "tags": [
+          "CRM - Users"
+        ],
+        "name": "Create a user",
+        "summary": "Create a CRM user",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your Users custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "email"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "email": {
+                    "type": "string"
+                  },
+                  "password": {
+                    "type": "string"
+                  },
+                  "secure_zones": {
+                    "type": "string"
+                  },
+                  "cfs_field_1_1": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - CRM user does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/webapps/{webapp}/items": {
+      "get": {
+        "tags": [
+          "WebApps"
+        ],
+        "name": "Get WebApp Items",
+        "summary": "Retrieve all WebApp Items from an individual WebApp",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "webapp",
+            "in": "path",
+            "required": true,
+            "description": "The WebApp ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "items",
+            "in": "query",
+            "description": "A comma seperated list of item IDs to retrieve, leave empty to get all items",
+            "schema": {
+              "type": "id",
+              "format": "array"
+            }
+          },
+          {
+            "name": "properties",
+            "in": "query",
+            "description": "A comma seperated list of properties that you would like to retrieve, leave empty to get all properties",
+            "example": "name,slug,enabled",
+            "schema": {
+              "type": "string",
+              "format": "array"
+            }
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "description": "Number of items to retireve, maximum of 500",
+            "example": 20,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "sort_type",
+            "in": "query",
+            "description": "Property by which to sort the results",
+            "example": "created_at",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "description": "Order of results (asc or desc)",
+            "example": "desc",
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "description": "Page to retrieve number, to be used with per_page",
+            "example": 1,
+            "schema": {
+              "type": "int"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - WebApp does not exist or contains no Items"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/webapps/{webapp}/items/{id}": {
+      "get": {
+        "tags": [
+          "WebApps"
+        ],
+        "name": "Get individual WebApp Items",
+        "summary": "Retrieve all data about an individual WebApp Item",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "webapp",
+            "in": "path",
+            "required": true,
+            "description": "The WebApp ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The ID of the WebApp item",
+            "schema": {
+              "type": "string",
+              "format": "id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "404": {
+            "description": "Not Found - WebApp Item does not exist"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      },
+      "put": {
+        "tags": [
+          "WebApps"
+        ],
+        "name": "Update WebApp Item",
+        "summary": "Update a WebApp Item within an individual WebApp",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "webapp",
+            "in": "path",
+            "required": true,
+            "description": "The WebApp ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "id",
+            "in": "path",
+            "required": true,
+            "description": "The WebApp Item ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your WebApp custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "webapp_field_1_1": {
+                    "type": "string"
+                  },
+                  "webapp_field_1_2": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    },
+    "/webapps/{webapp}/create": {
+      "post": {
+        "tags": [
+          "WebApps"
+        ],
+        "name": "Create WebApp Item",
+        "summary": "Create a WebApp Items within an individual WebApp",
+        "security": [
+          {
+            "apiKey": [],
+            "siteID": []
+          }
+        ],
+        "produces": [
+          "application/json"
+        ],
+        "consumes": [
+          "application/json"
+        ],
+        "parameters": [
+          {
+            "name": "webapp",
+            "in": "path",
+            "required": true,
+            "description": "The WebApp ID",
+            "example": 1,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Your WebApp custom fields as a JSON object",
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "enabled"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string"
+                  },
+                  "slug": {
+                    "type": "string"
+                  },
+                  "enabled": {
+                    "type": "string"
+                  },
+                  "webapp_field_1_1": {
+                    "type": "string"
+                  },
+                  "webapp_field_1_2": {
+                    "type": "string"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "OK"
+          },
+          "401": {
+            "description": "Unauthorized - Credentials Incorrect"
+          },
+          "403": {
+            "description": "Forbidden - You cannot access this site"
+          },
+          "422": {
+            "description": "Unprocessable Entity - Required data missing or data invalid"
+          }
+        }
+      }
+    }
+  },
+  "tags": []
+}
