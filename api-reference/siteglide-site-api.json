@@ -1,7 +1,7 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "Siteglide Site API",
+    "title": "Siteglide Site API2",
     "version": "2.0.0",
     "description": "<p>API for interacting with your Siteglide site.</p>\n\t\t<p>To test, authorize with your apiKey and siteID.</p>\n\t\t<hr/>\n\t\t<p>Looking for our Portal API? <a href=\"/portal/docs\">Click here</a></p>\n\t\t<p>To find documentation for v1.1.2 of Siteglide API, which is now deprecated, please follow this link - <a href=\"/v1/docs\">v1.1.2 API docs (deprecated)</a></p>\n\t\t<hr/>\n\t\t<a href=\"https://roadmap.siteglide.com\" rel=\"noopener\" target=\"_blank\">Roadmap</a>"
   },
