@@ -55,7 +55,7 @@
           {
             "group": "Endpoints",
             "pages": [],
-            "openapi": "api-reference/docs-spec.json"
+            "openapi": "api-reference/siteglide-site-api.json"
           }
         ]
       },
