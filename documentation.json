@@ -54,7 +54,8 @@
         "groups": [
           {
             "group": "Endpoints",
-            "pages": []
+            "pages": [],
+            "openapi": "api-reference/docs-spec.json"
           }
         ]
       },
